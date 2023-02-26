@@ -4,6 +4,8 @@ from qiskit.opflow.primitive_ops import PauliSumOp, PauliOp
 from qiskit.algorithms.optimizers import SPSA
 from qubap.qiskit.luciano.variational_algorithms import VQE, energy_evaluation
 from qubap.qiskit.jorge.tools import make_list_and_callback
+import qiskit.opflow as of
+
 
 def global2local( hamiltoniano, reduce=True ):
 
@@ -58,7 +60,17 @@ def test_hamiltonian( num_qubits, coeff ):
 
     hamiltonian = PauliSumOp( SparsePauliOp( ops, coeff ) )
 
-    return hamiltonian.reduce() 
+    return hamiltonian.reduce()
+
+def test_hamiltonian_2( num_qubits ):
+
+    Z = of.Z #Pauli Z
+    I = of.I #Identidad
+    Zero = 0.5*( I + Z )
+
+    hamiltonian = eval( '('+(num_qubits-1)*'I^'+'I)-('+(num_qubits-1)*'Zero^'+'Zero)' )
+
+    return hamiltonian.reduce()  
 
 def make_adiabatic_cost_and_callback(Hlocal, Hglobal, circ, backend, niters, callback=None):
     s = [0]
