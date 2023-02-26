@@ -4,7 +4,7 @@ from qiskit.opflow.primitive_ops import PauliSumOp, PauliOp
 from qiskit.algorithms.optimizers import SPSA
 from qubap.qiskit.luciano.variational_algorithms import VQE, energy_evaluation
 from qubap.qiskit.jorge.tools import SPSA_calibrated
-from qubap.qiskit.jorge.tools import make_array_and_callback
+from qubap.qiskit.jorge.tools import make_list_and_callback
 
 def global2local( hamiltoniano, reduce=True ):
 
@@ -101,8 +101,7 @@ def VQE_shift( hamiltonian, ansatz, initial_guess, max_iter, shift_iter, quantum
 def VQE_adiabatic( hamiltonian, ansatz, initial_guess, num_iters, quantum_instance ):
 
     hamiltonian_local = global2local( hamiltonian )
-    num_params = len(ansatz.parameters)
-    acc_adiabatic, cb = make_array_and_callback(niters=num_iters, nx=num_params)
+    acc_adiabatic, cb = make_list_and_callback(save=returns)
     cost, cb = make_adiabatic_cost_and_callback(Hglobal = hamiltonian, 
                                                 Hlocal  = hamiltonian_local, 
                                                 circ    = ansatz, 

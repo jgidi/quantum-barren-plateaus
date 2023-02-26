@@ -1,14 +1,16 @@
 import numpy as np
 from qiskit.algorithms.optimizers import SPSA
 
-def make_array_and_callback(niters, nx):
-    xacc = np.empty((niters, nx))
-    i = np.zeros(1, dtype=int)
-    def cb(nfev, x, fx, dx, is_accepted=True):
-        xacc[i[0], :] = x
-        i[0] += 1
+def make_list_and_callback(save='x'): # or save='fx'
+    acc = []
+    if save == 'x':
+        def cb(nfev, x, fx, dx, is_accepted=True):
+            acc.append(x)
+    else:
+        def cb(nfev, x, fx, dx, is_accepted=True):
+            acc.append(fx)
 
-    return xacc, cb
+    return acc, cb
 
 def SPSA_calibrated(fun, x0, iter_start=1, maxiter=100, **spsa_args):
 

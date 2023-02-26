@@ -1,6 +1,6 @@
 import qiskit.opflow as of
 from qubap.qiskit.jorge.tools import SPSA_calibrated
-from qubap.qiskit.jorge.tools import make_array_and_callback
+from qubap.qiskit.jorge.tools import make_list_and_callback
 
 def energy_evaluation( hamiltonian , ansatz, parameters , quantum_instance, callback=None  ):
     
