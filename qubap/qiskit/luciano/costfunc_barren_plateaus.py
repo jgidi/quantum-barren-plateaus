@@ -105,4 +105,4 @@ def VQE_shift( hamiltonian, ansatz, initial_guess, max_iter, shift_iter, quantum
     results_global = VQE(hamiltonian, ansatz, results_local[-1], max_iter-shift_iter, 
                          quantum_instance, iter_start=shift_iter) 
 
-    return np.append( results_local, results_global )
+    return np.append( results_local, results_global, axis=0 )
