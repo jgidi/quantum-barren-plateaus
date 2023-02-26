@@ -20,7 +20,7 @@ def energy_evaluation(hamiltonian, ansatz, parameters , quantum_instance, callba
     return evaluation
     
 def VQE(hamiltonian, ansatz, initial_guess, num_iters, quantum_instance,
-        returns='x', iter_start=1):
+        returns=['x', 'fx'], iter_start=0):
 
     results, callback = make_data_and_callback(save=returns)
     

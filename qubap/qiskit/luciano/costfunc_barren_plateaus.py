@@ -108,13 +108,13 @@ def VQE_adiabatic( hamiltonian, ansatz, initial_guess, num_iters, quantum_instan
     return acc_adiabatic
 
 
-def VQE_shift( hamiltonian, ansatz, initial_guess, max_iter, shift_iter, quantum_instance, returns='x'):
+def VQE_shift( hamiltonian, ansatz, initial_guess, max_iter, shift_iter, quantum_instance, returns=['x', 'fx']):
 
     hamiltonian_local = global2local( hamiltonian )
 
     results_local  = VQE(hamiltonian_local, ansatz, initial_guess, shift_iter,
                          quantum_instance, returns)
-    results_global = VQE(hamiltonian, ansatz, results_local[-1], max_iter-shift_iter, 
+    results_global = VQE(hamiltonian, ansatz, results_local['x'][-1], max_iter-shift_iter, 
                          quantum_instance, iter_start=shift_iter) 
 
-    return np.append( results_local, results_global, axis=0 )
+    return np.append( results_local['x'], results_global['x'], axis=0 )

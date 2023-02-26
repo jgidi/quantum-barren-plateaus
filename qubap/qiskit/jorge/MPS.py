@@ -55,20 +55,23 @@ def Ansatz(num_qubits,
 
     return qc
 
-def VQE_pretrained(hamiltonian, quantum_instance, iters_vqe, iters_train, returns='x'):
+def VQE_pretrained(hamiltonian, quantum_instance, iters_vqe, iters_train, returns=['x', 'fx']):
+
+    returns_mps = np.unique(np.append(['x'], returns))
+
     qc_mps = Ansatz(hamiltonian.num_qubits, diagonal=True)
     backend_mps = AerSimulator(method='matrix_product_state',
                                matrix_product_state_max_bond_dimension=2,
                                shots=2**13)
     guess_mps = np.random.rand(qc_mps.num_parameters) * np.pi
-    results_mps = VQE(hamiltonian, qc_mps, guess_mps, iters_train, backend_mps)
-    params_mps = np.mean(results_mps[-10:], axis=0)
+    results_mps = VQE(hamiltonian, qc_mps, guess_mps, iters_train, backend_mps, returns=returns_mps)
+    params_mps = np.mean(results_mps['x'][-10:], axis=0)
 
     qc_full = Ansatz(hamiltonian.num_qubits, diagonal=False)
     num_params_full = qc_full.num_parameters
 
     guess_full = np.append(params_mps, np.zeros(num_params_full - len(params_mps)))
-    results_full = VQE(hamiltonian, qc_mps, guess_mps, iters_vqe, quantum_instance,
+    results_full = VQE(hamiltonian, qc_full, guess_full, iters_vqe, quantum_instance,
                        iter_start=iters_train, returns=returns)
 
     return results_full, results_mps
