@@ -3,7 +3,7 @@ from qiskit.quantum_info import Pauli, SparsePauliOp
 from qiskit.opflow.primitive_ops import PauliSumOp, PauliOp
 from qiskit.algorithms.optimizers import SPSA
 from qubap.qiskit.luciano.variational_algorithms import VQE, energy_evaluation
-from qubap.qiskit.jorge.tools import make_list_and_callback
+from qubap.qiskit.jorge.tools import make_data_and_callback
 import qiskit.opflow as of
 
 
@@ -95,7 +95,7 @@ def make_adiabatic_cost_and_callback(Hlocal, Hglobal, circ, backend, niters, cal
 def VQE_adiabatic( hamiltonian, ansatz, initial_guess, num_iters, quantum_instance, returns='x'):
 
     hamiltonian_local = global2local( hamiltonian )
-    acc_adiabatic, cb = make_list_and_callback(save=returns)
+    acc_adiabatic, cb = make_data_and_callback(save=returns)
     cost, cb = make_adiabatic_cost_and_callback(Hglobal = hamiltonian, 
                                                 Hlocal  = hamiltonian_local, 
                                                 circ    = ansatz, 

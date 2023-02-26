@@ -1,16 +1,14 @@
 import numpy as np
 from qiskit.algorithms.optimizers import SPSA
 
-def make_list_and_callback(save='x'): # or save='fx'
-    acc = []
-    if save == 'x':
-        def cb(nfev, x, fx, dx, is_accepted=True):
-            acc.append(x)
-    else:
-        def cb(nfev, x, fx, dx, is_accepted=True):
-            acc.append(fx)
-
-    return acc, cb
+def make_data_and_callback(save=['x', 'fx']):
+    if isinstance(save, str): save = [save]
+    data = {key : [] for key in save}
+    def cb(nfev, x, fx, dx, is_accepted=True):
+        values = locals()
+        for key in save:
+            data[key].append(values[key])
+    return data, cb
 
 def SPSA_calibrated(fun, x0, iter_start=1, maxiter=100, **spsa_args):
 

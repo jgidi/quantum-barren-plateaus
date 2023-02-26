@@ -2,7 +2,7 @@ import qiskit.opflow as of
 from qiskit.algorithms import NumPyMinimumEigensolver
 
 from qubap.qiskit.jorge.tools import SPSA_calibrated
-from qubap.qiskit.jorge.tools import make_list_and_callback
+from qubap.qiskit.jorge.tools import make_data_and_callback
 
 def energy_evaluation(hamiltonian, ansatz, parameters , quantum_instance, callback=None):
     
@@ -22,7 +22,7 @@ def energy_evaluation(hamiltonian, ansatz, parameters , quantum_instance, callba
 def VQE(hamiltonian, ansatz, initial_guess, num_iters, quantum_instance,
         returns='x', iter_start=1):
 
-    results, callback = make_list_and_callback(save=returns)
+    results, callback = make_data_and_callback(save=returns)
     
     energy_hamiltonian = lambda params : energy_evaluation(hamiltonian, ansatz, params, quantum_instance)
 
