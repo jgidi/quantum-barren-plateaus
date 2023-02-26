@@ -43,6 +43,10 @@ def global2local( hamiltoniano, reduce=True ):
 
     return hamiltoniano_local.reduce() if reduce else hamiltoniano_local
 
+def paulistrings2hamiltonian(pauli_strings, coeffs):
+
+    return PauliSumOp( SparsePauliOp( [Pauli(string) for string in pauli_strings], coeffs ) )
+
 
 def test_hamiltonian( num_qubits, coeff ):
 
