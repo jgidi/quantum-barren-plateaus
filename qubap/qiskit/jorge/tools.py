@@ -21,8 +21,8 @@ def SPSA_calibrated(fun, x0, iter_start=1, maxiter=100, **spsa_args):
         next(ak)
         next(bk)
 
-    ak = np.array([next(ak) for _ in range(maxiter)])
-    bk = np.array([next(bk) for _ in range(maxiter)])
+    ak = [next(ak) for _ in range(maxiter)]
+    bk = [next(bk) for _ in range(maxiter)]
 
     return SPSA(learning_rate=ak, perturbation=bk, maxiter=maxiter, **spsa_args)
 

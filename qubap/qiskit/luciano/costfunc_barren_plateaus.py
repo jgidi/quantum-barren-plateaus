@@ -3,7 +3,6 @@ from qiskit.quantum_info import Pauli, SparsePauliOp
 from qiskit.opflow.primitive_ops import PauliSumOp, PauliOp
 from qiskit.algorithms.optimizers import SPSA
 from qubap.qiskit.luciano.variational_algorithms import VQE, energy_evaluation
-from qubap.qiskit.jorge.tools import SPSA_calibrated
 from qubap.qiskit.jorge.tools import make_list_and_callback
 
 def global2local( hamiltoniano, reduce=True ):
@@ -61,44 +60,27 @@ def test_hamiltonian( num_qubits, coeff ):
 
     return hamiltonian.reduce() 
 
-def make_adiabatic_cost_and_update(Hlocal, Hglobal, circ, backend, niters):
-    s = np.zeros(1)
+def make_adiabatic_cost_and_callback(Hlocal, Hglobal, circ, backend, niters, callback=None):
+    s = [0]
+    def cost(x):
+        # Linearly increasing. Reaches 1.0 at 80% of the iterations.
+        a = (s[0] / niters) * 5/4
+        a = min(a, 1.0)
+        H = (1 - a)*Hlocal + a*Hglobal
+        return energy_evaluation(H, circ, x, backend)
     def update(i=None):
         if i is None:
             s[0] += 1
         else:
             s[0] = i
-    def cost(x):
-        # Linearly increasing. Reaches 1.0 at 80% of the iterations.
-        a = float(s[0] / niters) * 5/4
-        a = max(a, 1.0)
-
-        # if a > 0:
-        #     print(f'a = {a}, type of a: {type(a)}')
-        H = (1 - a)*Hlocal + a*Hglobal
-        return energy_evaluation(H, circ, x, backend)
-    return cost, update
-
-def make_adiabatic_cost_and_callback(Hlocal, Hglobal, circ, backend, niters, callback=None):
-    cost, update = make_adiabatic_cost_and_update(Hlocal, Hglobal, circ, backend, niters)
     def cb_wrapper(nfev, x, fx, dx, is_accepted=True):
         update()
         if callback is not None:
             callback(nfev, x, fx, dx, is_accepted)
     return cost, cb_wrapper
 
-def VQE_shift( hamiltonian, ansatz, initial_guess, max_iter, shift_iter, quantum_instance  ):
 
-    hamiltonian_local = global2local( hamiltonian )
-
-    results_local  = VQE( hamiltonian_local, ansatz, initial_guess, shift_iter, quantum_instance )
-    results_global = VQE( hamiltonian, ansatz, results_local[-1], max_iter-shift_iter, 
-                            quantum_instance, iter_start=shift_iter ) 
-
-    return np.append( results_local, results_global )
-
-
-def VQE_adiabatic( hamiltonian, ansatz, initial_guess, num_iters, quantum_instance ):
+def VQE_adiabatic( hamiltonian, ansatz, initial_guess, num_iters, quantum_instance, returns='x'):
 
     hamiltonian_local = global2local( hamiltonian )
     acc_adiabatic, cb = make_list_and_callback(save=returns)
@@ -112,3 +94,15 @@ def VQE_adiabatic( hamiltonian, ansatz, initial_guess, num_iters, quantum_instan
     optimizer.minimize(cost, initial_guess)
 
     return acc_adiabatic
+
+
+def VQE_shift( hamiltonian, ansatz, initial_guess, max_iter, shift_iter, quantum_instance, returns='x'):
+
+    hamiltonian_local = global2local( hamiltonian )
+
+    results_local  = VQE(hamiltonian_local, ansatz, initial_guess, shift_iter,
+                         quantum_instance, returns)
+    results_global = VQE(hamiltonian, ansatz, results_local[-1], max_iter-shift_iter, 
+                         quantum_instance, iter_start=shift_iter) 
+
+    return np.append( results_local, results_global )
