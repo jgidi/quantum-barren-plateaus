@@ -32,3 +32,25 @@ def parse_hamiltonian(paulis, coefs):
     if isinstance(coefs, str): coefs = [coefs]
 
     return PauliSumOp( SparsePauliOp(paulis, coefs) )
+
+def ladder_hamiltonian(num_qubits, qubit_ops = None):
+    if qubit_ops is None:
+        qubit_ops = ['Z'] * num_qubits
+
+    def interactions(i, j):
+        paulis = ['I'] * num_qubits
+        for l in [i, j]:
+            if l < num_qubits:
+                paulis[l] = qubit_ops[l]
+        return ''.join(paulis)
+
+    operators = []
+    for n in range(num_qubits):
+        # Even n only, with upper bound
+        if (not n%2) and (n < num_qubits-1):
+            operators.append( interactions(n, n+1) )
+        # Even and odd, with upper bound
+        if n < num_qubits-2:
+            operators.append( interactions(n, n+2) )
+    
+    return parse_hamiltonian(operators, [1]*len(operators))
