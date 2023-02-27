@@ -101,7 +101,6 @@ def make_adiabatic_cost_and_callback(Hlocal, Hglobal, circ, backend, niters, cal
             callback(nfev, x, fx, dx, is_accepted)
     return cost, cb_wrapper
 
-
 def VQE_adiabatic( hamiltonian, ansatz, initial_guess, num_iters, quantum_instance, returns=['x', 'fx']):
 
     hamiltonian_local = global2local( hamiltonian )
@@ -116,7 +115,6 @@ def VQE_adiabatic( hamiltonian, ansatz, initial_guess, num_iters, quantum_instan
     optimizer.minimize(cost, initial_guess)
 
     return acc_adiabatic
-
 
 def VQE_shift( hamiltonian, ansatz, initial_guess, max_iter, shift_iter, quantum_instance, iter_start=0, returns=['x', 'fx']):
 
