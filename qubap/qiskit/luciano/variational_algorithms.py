@@ -21,7 +21,17 @@ def energy_evaluation(hamiltonian, ansatz, parameters , quantum_instance, callba
     
 def VQE(hamiltonian, ansatz, initial_guess, num_iters, quantum_instance,
         returns=['x', 'fx'], iter_start=0):
+    """
+    Standard VQE
 
+    Input:
+        hamiltonian (PauliSumOp): 
+        ansatz (QuantumCircuit): 
+        initial_guess ()
+
+    Output:
+        (): 
+    """
     results, callback = make_data_and_callback(save=returns)
     
     energy_hamiltonian = lambda params : energy_evaluation(hamiltonian, ansatz, params, quantum_instance)
