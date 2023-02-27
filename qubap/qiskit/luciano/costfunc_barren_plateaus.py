@@ -79,10 +79,16 @@ def test_hamiltonian_2( num_qubits ):
 def make_adiabatic_cost_and_callback(Hlocal, Hglobal, circ, backend, niters, callback=None):
     s = [0]
     def cost(x):
-        # Linearly increasing. Reaches 1.0 at 80% of the iterations.
-        a = (s[0] / niters) * 5/4
-        a = min(a, 1.0)
-        H = (1 - a)*Hlocal + a*Hglobal
+        # 'a' is linearly increasing.
+        # Starts at 0 for x1% of the iterations, and reaches 1.0 at x2%
+        x1, x2 = 0.3, 0.7
+        a = (s[0]/niters - x1) / (x2 - x1)
+        if a < 0:
+            H = Hlocal
+        elif a > 1:
+            H = Hglobal
+        else:
+            H = (1 - a)*Hlocal + a*Hglobal
         return energy_evaluation(H, circ, x, backend)
     def update(i=None):
         if i is None:
@@ -96,7 +102,7 @@ def make_adiabatic_cost_and_callback(Hlocal, Hglobal, circ, backend, niters, cal
     return cost, cb_wrapper
 
 
-def VQE_adiabatic( hamiltonian, ansatz, initial_guess, num_iters, quantum_instance, returns='x'):
+def VQE_adiabatic( hamiltonian, ansatz, initial_guess, num_iters, quantum_instance, returns=['x', 'fx']):
 
     hamiltonian_local = global2local( hamiltonian )
     acc_adiabatic, cb = make_data_and_callback(save=returns)
