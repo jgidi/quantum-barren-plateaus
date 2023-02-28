@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from numbers import Number
+import numpy as np
 from qiskit.quantum_info import Pauli, SparsePauliOp
 from qiskit.opflow.primitive_ops import PauliOp, PauliSumOp
 
@@ -11,7 +11,16 @@ def parse_hamiltonian(paulis, coefs):
     return PauliSumOp( SparsePauliOp(paulis, coefs) )
 
 def global2local( hamiltoniano, reduce=True ):
+    """
+    Descriptiom
 
+    Input:
+        hamiltonian (PauliSumOp):
+        reduce(, optional):
+
+    Output:
+        ():
+    """
     num_qubits = hamiltoniano.num_qubits
 
     ops_local   = []

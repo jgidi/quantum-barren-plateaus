@@ -1,59 +1,24 @@
 #!/usr/bin/env python3
-# %%
 import sys
 sys.path.append('../../..')
 
 import numpy as np
 import qiskit.opflow as of
 from qiskit.quantum_info import Pauli, SparsePauliOp
-from qiskit.opflow.primitive_ops import PauliSumOp, PauliOp
+from qiskit.opflow.primitive_ops import PauliSumOp
 from qubap.qiskit.hamiltonians.tools import parse_hamiltonian
 
-def global2local( hamiltoniano, reduce=True ):
+def ladder_hamiltonian(num_qubits, transverse_field_intensity=0):
     """
     Descriptiom
 
     Input:
-        hamiltonian (PauliSumOp):
-        reduce(, optional):
+        num_qubits (int): numbers of qubits
+        transverse_field_intensity (, optional):
 
     Output:
         ():
     """
-    num_qubits = hamiltoniano.num_qubits
-
-    ops_local   = []
-    coeff_local = []
-
-    paulis_global = hamiltoniano.to_pauli_op()
-    if isinstance( paulis_global, PauliOp ):
-        paulis_global = [paulis_global]
-
-    for pauli_global, coeff in zip( paulis_global, hamiltoniano.coeffs ):
-        pauli_label = pauli_global.primitive.to_label()
-
-        for qb in range(num_qubits):
-            pauli_local = pauli_label[qb]
-            x = np.zeros(num_qubits)
-            z = np.zeros(num_qubits)
-
-            if pauli_local == 'X':
-                x[qb] = 1
-            elif pauli_local == 'Z':
-                z[qb] = 1
-            elif pauli_local == 'Y':
-                x[qb] = 1
-                z[qb] = 1
-
-            ops_local.append( Pauli((z,x)) )
-            coeff_local.append( coeff/num_qubits )
-
-    hamiltoniano_local = PauliSumOp( SparsePauliOp( ops_local, coeff_local ) )
-
-    return hamiltoniano_local.reduce() if reduce else hamiltoniano_local
-
-
-def ladder_hamiltonian(num_qubits, transverse_field_intensity=0):
     def interactions(i, j):
         paulis = ['I'] * num_qubits
         for l in [i, j]:
@@ -83,6 +48,16 @@ def ladder_hamiltonian(num_qubits, transverse_field_intensity=0):
     return parse_hamiltonian(operators, operator_coeffs)
 
 def test_hamiltonian( num_qubits, coeff ):
+    """
+    Descriptiom
+
+    Input:
+        num_qubits (int): numbers of qubits
+        coeff ():
+
+    Output:
+        ():
+    """
     ops = []
 
     z = np.zeros(num_qubits)
@@ -105,7 +80,6 @@ def test_hamiltonian_2( num_qubits ):
 
     Input:
         num_qubits (int): numbers of qubits
-        reduce(, optional):
 
     Output:
         ():
@@ -116,7 +90,3 @@ def test_hamiltonian_2( num_qubits ):
     hamiltonian = eval( '('+(num_qubits-1)*'I^'+'I)-('+(num_qubits-1)*'Zero^'+'Zero)' )
 
     return hamiltonian.reduce()
-
-# %%
-global2local( test_hamiltonian(2, [3,2,2]))
-# %%
