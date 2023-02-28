@@ -65,6 +65,8 @@ def VQE_pretrain(hamiltonian,  iters_train, returns=['x', 'fx']):
     guess_mps = np.random.rand(qc_mps.num_parameters) * np.pi
     results_mps = VQE(hamiltonian, qc_mps, guess_mps, iters_train, backend_mps, returns=returns)
 
+    results_mps['circuit'] = qc_mps
+
     return results_mps
 
 
@@ -81,4 +83,11 @@ def VQE_pretrained(hamiltonian, quantum_instance, iters_vqe, iters_train, return
     results_full = VQE(hamiltonian, qc_full, guess_full, iters_vqe, quantum_instance,
                        iter_start=iters_train, returns=returns)
 
-    return results_full, results_mps
+    results_full['circuit'] = qc_full
+
+    results = {
+        'pretrain'    : results_mps,
+        'full'        : results_full,
+    }
+
+    return results
