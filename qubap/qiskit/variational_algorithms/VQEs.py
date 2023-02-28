@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 from .tools import energy_evaluation, make_adiabatic_cost_and_callback
-from qubap.qiskit.tools import make_data_and_callback, SPSA_calibrated
-from qubap.qiskit.hamiltonians.tools import global2local
 from qiskit.algorithms.optimizers import SPSA
+from .tools import make_data_and_callback, SPSA_calibrated
+# from qubap.qiskit.tools import make_data_and_callback, SPSA_calibrated
 
 def VQE(hamiltonian, ansatz, initial_guess, num_iters, quantum_instance,
         returns=['x', 'fx'], iter_start=0):
@@ -31,7 +31,7 @@ def VQE(hamiltonian, ansatz, initial_guess, num_iters, quantum_instance,
 
     return results
 
-def VQE_adiabatic(hamiltonian, ansatz, initial_guess, num_iters,
+def VQE_adiabatic(hamiltonian_in, hamiltonian_out, ansatz, initial_guess, num_iters,
                   quantum_instance, transition_lims=(0.0, 1.0),
                   returns=['x', 'fx']):
     """
@@ -47,10 +47,10 @@ def VQE_adiabatic(hamiltonian, ansatz, initial_guess, num_iters,
     Output:
         ():
     """
-    hamiltonian_local = global2local( hamiltonian )
+
     acc_adiabatic, cb = make_data_and_callback(save=returns)
-    cost, cb = make_adiabatic_cost_and_callback(Hglobal = hamiltonian,
-                                                Hlocal  = hamiltonian_local,
+    cost, cb = make_adiabatic_cost_and_callback(Hglobal = hamiltonian_out,
+                                                Hlocal  = hamiltonian_in,
                                                 circ    = ansatz,
                                                 backend = quantum_instance,
                                                 niters  = num_iters,
@@ -61,12 +61,14 @@ def VQE_adiabatic(hamiltonian, ansatz, initial_guess, num_iters,
 
     return acc_adiabatic
 
-def VQE_shift( hamiltonian, ansatz, initial_guess, max_iter, shift_iter, quantum_instance, iter_start=0, returns=['x', 'fx']):
+
+def VQE_shift( hamiltonian_in, hamiltonian_out, ansatz, initial_guess, max_iter, shift_iter, quantum_instance, iter_start=0, returns=['x', 'fx']):
     """
     Description
 
     Input:
-        hamiltonian (PauliSumOp):
+        hamiltonian_in (PauliSumOp):
+        hamiltonian_out (PauliSumOp):
         ansatz (QuantumCircuit):
         initial_guess (ndarray):
         num_iters (int): number of iteration of the VQE algorithm
@@ -75,14 +77,13 @@ def VQE_shift( hamiltonian, ansatz, initial_guess, max_iter, shift_iter, quantum
     Output:
         ():
     """
-    hamiltonian_local = global2local( hamiltonian )
 
-    results_local  = VQE(hamiltonian_local, ansatz, initial_guess, shift_iter,
+    results_in  = VQE(hamiltonian_in, ansatz, initial_guess, shift_iter,
                          quantum_instance, returns, iter_start=iter_start)
-    results_global = VQE(hamiltonian, ansatz, results_local['x'][-1], max_iter-shift_iter,
+    results_out = VQE(hamiltonian_out, ansatz, results_in['x'][-1], max_iter-shift_iter,
                          quantum_instance, iter_start=shift_iter+iter_start)
 
-    results  = {'local'  : results_local,
-                'global' : results_global}
+    results  = {'in'  : results_in,
+                'out' : results_out}
 
     return results

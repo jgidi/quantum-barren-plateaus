@@ -47,7 +47,8 @@ def ladder_hamiltonian(num_qubits, transverse_field_intensity=0):
 
     return parse_hamiltonian(operators, operator_coeffs)
 
-def test_hamiltonian( num_qubits, coeff ):
+
+def test_hamiltonian_2( num_qubits, coeff ):
     """
     Descriptiom
 
@@ -74,7 +75,7 @@ def test_hamiltonian( num_qubits, coeff ):
 
     return hamiltonian.reduce()
 
-def test_hamiltonian_2( num_qubits ):
+def test_hamiltonian( num_qubits ):
     """
     Descriptiom
 

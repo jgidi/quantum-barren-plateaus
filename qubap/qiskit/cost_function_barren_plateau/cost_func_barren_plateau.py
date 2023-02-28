@@ -1,17 +1,57 @@
 import qiskit.opflow as of
 from qiskit import QuantumCircuit
 from qiskit.circuit import ParameterVector
-from qubap.qiskit.hamiltonians import global2local
 import numpy as np
+from qiskit.quantum_info import Pauli, SparsePauliOp
+from qiskit.opflow.primitive_ops import PauliOp, PauliSumOp
 # %%
 """"
 In this program we are trying to replicate the numerical 
-simulations from the paper
+simulations of a quantum autoencoder from the paper
 
 Cerezo, M., Sone, A., Volkoff, T. et al. Cost function dependent
 barren plateaus in shallow parametrized quantum circuits. 
 Nat Commun 12, 1791 (2021). https://doi.org/10.1038/s41467-021-21728-w
 """
+
+def global2local( hamiltoniano, reduce=True ):
+
+    num_qubits = hamiltoniano.num_qubits
+
+    ops_local   = []
+    coeff_local = []
+
+    paulis_global = hamiltoniano.to_pauli_op()
+    if isinstance( paulis_global, PauliOp ):
+        paulis_global = [paulis_global]
+
+    for pauli_global, coeff in zip( paulis_global, hamiltoniano.coeffs ):
+        pauli_label = pauli_global.primitive.to_label()
+
+        for qb in range(num_qubits):
+            pauli_local = pauli_label[qb]
+            x = np.zeros(num_qubits)
+            z = np.zeros(num_qubits)
+
+            if pauli_local == 'X':
+                x[qb] = 1
+            elif pauli_local == 'Z':
+                z[qb] = 1
+            elif pauli_local == 'Y':
+                x[qb] = 1
+                z[qb] = 1
+            # elif pauli_local == 'I':
+            #     continue
+
+            ops_local.append( Pauli((z,x)) )
+            coeff_local.append( coeff/num_qubits )
+
+    hamiltoniano_local = PauliSumOp( SparsePauliOp( ops_local, coeff_local ) )
+
+    return hamiltoniano_local.reduce() if reduce else hamiltoniano_local
+
+
+
 
 def global_observable(n_qbitsB, n_qbitsA=1):
     """
