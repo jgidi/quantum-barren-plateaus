@@ -1,7 +1,7 @@
 import qiskit.opflow as of
 from qiskit import QuantumCircuit
 from qiskit.circuit import ParameterVector
-from qubap.qiskit.luciano.costfunc_barren_plateaus import global2local
+from qubap.qiskit.hamiltonians import global2local
 import numpy as np
 # %%
 """"
