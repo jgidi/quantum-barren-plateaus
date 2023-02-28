@@ -60,6 +60,4 @@ def ladder_hamiltonian(num_qubits, transverse_field_intensity=0):
             operators.append(''.join(paulis))
             operator_coeffs.append(transverse_field_intensity)
         
-
-    
     return parse_hamiltonian(operators, operator_coeffs)
