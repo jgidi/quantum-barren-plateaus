@@ -36,7 +36,7 @@ def cnot_layer( n_qbits, n_cnot='Full_connect' ):
             
     return circ
 
-
+# TODO mover a tools solo esta funcion
 def parity_test( n ):
     """
     Check if the number is even or odd.
@@ -97,12 +97,14 @@ def SCL( params, n_qbits, n_qbits_crz=2, deep=1, name=None ):
             for l in range( 1, n_qbits_crz ):
                 cc += 1
                 qc.cz( i, i+l )
+                qc.ry( params[ qubits + cc ], i )
+                qc.ry( params[ qubits + cc ], i + l )
 
 
     return qc.to_gate( )
 
 
-def ansatz_constructor( n_qbits, unitaries=[SCL, SCL, SCL], n_qb_crz=[2,2,2], deep= [1,1,1], n_cnot='Full_connect' ):
+def ansatz_constructor( n_qbits, unitaries=[SCL, SCL, SCL], n_qb_crz=[2,2,2], deep= [1,1,1], n_cnot='Full_connect', set_barrier=False ):
     """
     The ansatz circuit that are made of three Parametrized Quantum Circuits (PQC's) and one entangling layer. The input parameters will define this four parts of the ansatz circuit.
 
@@ -125,7 +127,7 @@ def ansatz_constructor( n_qbits, unitaries=[SCL, SCL, SCL], n_qb_crz=[2,2,2], de
         -A Parametric Quantum Circuit (PQC) that in our case could perform a schmith decomposition or a basis change.
     """
 
-    num_params_SCL = ( deep[0] +1 )*n_qbits
+    num_params_SCL = ( deep[0] +1 )*n_qbits + deep[0]*(n_qbits - 2)
       
     params_1 = ParameterVector(r"$\theta$", num_params_SCL)
     params_2 = ParameterVector(r"$\phi$", num_params_SCL)
@@ -140,11 +142,13 @@ def ansatz_constructor( n_qbits, unitaries=[SCL, SCL, SCL], n_qb_crz=[2,2,2], de
 
 
     qc.compose( U_1 , qubits=range( int(n_qbits/2) ), clbits=None, inplace=True )         # Compose entangled layer cnots
-    qc.barrier()
-    
+    if set_barrier== True:
+        qc.barrier()
+
     qc.compose( ent_l , qubits=range( n_qbits ), clbits=None, inplace=True )              # Compose entangled layer cnots
-    qc.barrier()
-    
+    if set_barrier== True:
+        qc.barrier()
+
     qc.compose( U_2 , qubits=range( int(n_qbits/2) ), clbits=None, inplace=True )         # Compose entangled layer cnots
     qc.compose( U_3 , qubits=range( int(n_qbits/2), n_qbits ), clbits=None, inplace=True ) # Compose entangled layer cnots
     
