@@ -76,16 +76,22 @@ def test_hamiltonian_2( num_qubits ):
 
     return hamiltonian.reduce()  
 
-def make_adiabatic_cost_and_callback(Hlocal, Hglobal, circ, backend, niters, callback=None):
+def make_adiabatic_cost_and_callback(Hlocal, Hglobal, circ, backend, niters,
+                                     transition_lims=(0.3, 0.7), callback=None):
     s = [0]
+    a1, a2 = np.min(transition_lims), np.max(transition_lims)
+    if a1 == a2:
+        get_a = lambda x : int( x > a1 )
+    else:
+        get_a = lambda x : float((x/niters - a1) / (a2 - a1))
+
     def cost(x):
         # 'a' is linearly increasing.
-        # Starts at 0 for x1% of the iterations, and reaches 1.0 at x2%
-        x1, x2 = 0.3, 0.7
-        a = (s[0]/niters - x1) / (x2 - x1)
-        if a < 0:
+        # Starts at 0 for a1% of the iterations, and reaches 1.0 at a2%
+        a = get_a( s[0] )
+        if a <= 0:
             H = Hlocal
-        elif a > 1:
+        elif a >= 1:
             H = Hglobal
         else:
             H = (1 - a)*Hlocal + a*Hglobal
@@ -101,8 +107,9 @@ def make_adiabatic_cost_and_callback(Hlocal, Hglobal, circ, backend, niters, cal
             callback(nfev, x, fx, dx, is_accepted)
     return cost, cb_wrapper
 
-
-def VQE_adiabatic( hamiltonian, ansatz, initial_guess, num_iters, quantum_instance, returns=['x', 'fx']):
+def VQE_adiabatic(hamiltonian, ansatz, initial_guess, num_iters,
+                  quantum_instance, transition_lims=(0.3, 0.7),
+                  returns=['x', 'fx']):
 
     hamiltonian_local = global2local( hamiltonian )
     acc_adiabatic, cb = make_data_and_callback(save=returns)
@@ -110,13 +117,13 @@ def VQE_adiabatic( hamiltonian, ansatz, initial_guess, num_iters, quantum_instan
                                                 Hlocal  = hamiltonian_local, 
                                                 circ    = ansatz, 
                                                 backend = quantum_instance, 
-                                                niters  = num_iters, 
+                                                niters  = num_iters,
+                                                transition_lims = transition_lims,
                                                 callback = cb)
     optimizer = SPSA(maxiter=num_iters, callback=cb)
     optimizer.minimize(cost, initial_guess)
 
     return acc_adiabatic
-
 
 def VQE_shift( hamiltonian, ansatz, initial_guess, max_iter, shift_iter, quantum_instance, iter_start=0, returns=['x', 'fx']):
 

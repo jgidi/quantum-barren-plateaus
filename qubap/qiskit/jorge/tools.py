@@ -33,17 +33,15 @@ def parse_hamiltonian(paulis, coefs):
 
     return PauliSumOp( SparsePauliOp(paulis, coefs) )
 
-def ladder_hamiltonian(num_qubits, qubit_ops = None):
-    if qubit_ops is None:
-        qubit_ops = ['Z'] * num_qubits
-
+def ladder_hamiltonian(num_qubits, transverse_field_intensity=0):
     def interactions(i, j):
         paulis = ['I'] * num_qubits
         for l in [i, j]:
             if l < num_qubits:
-                paulis[l] = qubit_ops[l]
+                paulis[l] = 'Z'
         return ''.join(paulis)
-
+    
+    # Add a term for each interacting pair
     operators = []
     for n in range(num_qubits):
         # Even n only, with upper bound
@@ -52,5 +50,16 @@ def ladder_hamiltonian(num_qubits, qubit_ops = None):
         # Even and odd, with upper bound
         if n < num_qubits-2:
             operators.append( interactions(n, n+2) )
+    operator_coeffs = [1]*len(operators)
     
-    return parse_hamiltonian(operators, [1]*len(operators))
+    # If there is magnetic field
+    if transverse_field_intensity:
+        for i in range(num_qubits):
+            paulis = ['I'] * num_qubits
+            paulis[i] = 'X'
+            operators.append(''.join(paulis))
+            operator_coeffs.append(transverse_field_intensity)
+        
+
+    
+    return parse_hamiltonian(operators, operator_coeffs)

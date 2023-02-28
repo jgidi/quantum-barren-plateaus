@@ -5,23 +5,42 @@ from qubap.qiskit.jorge.tools import SPSA_calibrated
 from qubap.qiskit.jorge.tools import make_data_and_callback
 
 def energy_evaluation(hamiltonian, ansatz, parameters , quantum_instance, callback=None):
-    
-    ansatz_state = of.StateFn( ansatz.bind_parameters(parameters) )
+    """
+    Evaluate the energy given an ansatz and a Hamiltonian
+
+    Input:
+    hamiltonian (PauliSumOp): Hamiltonian of the system
+    ansatz (QuantumCircuit): 
+    initial_guess (ndarray):
+    quantum_instance (QuantumInstance):
+
+    Output:
+        (dict): 
+    """
+    ansatz_state = of.StateFn( ansatz.bind_parameters(parameters) )  
     measurement = of.StateFn( hamiltonian ).adjoint() @ ansatz_state
-    
     pauli_circs = of.PauliExpectation().convert(measurement)
     sampler = of.CircuitSampler(quantum_instance).convert(pauli_circs)
-    
     evaluation = sampler.eval().real
-
     if callback is not None:
         callback( parameters, evaluation )
-
     return evaluation
     
 def VQE(hamiltonian, ansatz, initial_guess, num_iters, quantum_instance,
         returns=['x', 'fx'], iter_start=0):
+    """
+    Standard VQE
 
+    Input:
+        hamiltonian (PauliSumOp): 
+        ansatz (QuantumCircuit): 
+        initial_guess (ndarray):
+        num_iters (int): number of iteration of the VQE algorithm
+        quantum_instance ()
+
+    Output:
+        (dict): 
+    """
     results, callback = make_data_and_callback(save=returns)
     
     energy_hamiltonian = lambda params : energy_evaluation(hamiltonian, ansatz, params, quantum_instance)
