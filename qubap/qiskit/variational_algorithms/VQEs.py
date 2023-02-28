@@ -2,6 +2,8 @@
 
 from .tools import energy_evaluation, make_adiabatic_cost_and_callback
 from qubap.qiskit.tools import make_data_and_callback, SPSA_calibrated
+from qubap.qiskit.hamiltonians.tools import global2local
+from qiskit.algorithms.optimizers import SPSA
 
 def VQE(hamiltonian, ansatz, initial_guess, num_iters, quantum_instance,
         returns=['x', 'fx'], iter_start=0):
@@ -13,8 +15,7 @@ def VQE(hamiltonian, ansatz, initial_guess, num_iters, quantum_instance,
         ansatz (QuantumCircuit):
         initial_guess (ndarray):
         num_iters (int): number of iteration of the VQE algorithm
-        quantum_instance ()
-
+        quantum_instance (QuantumInstance):
     Output:
         (dict):
     """
@@ -33,7 +34,19 @@ def VQE(hamiltonian, ansatz, initial_guess, num_iters, quantum_instance,
 def VQE_adiabatic(hamiltonian, ansatz, initial_guess, num_iters,
                   quantum_instance, transition_lims=(0.0, 1.0),
                   returns=['x', 'fx']):
+    """
+    VQE in the adiabatic regime
 
+    Input:
+        hamiltonian (PauliSumOp):
+        ansatz (QuantumCircuit):
+        initial_guess (ndarray):
+        num_iters (int): number of iteration of the VQE algorithm
+        quantum_instance (QuantumInstance):
+
+    Output:
+        ():
+    """
     hamiltonian_local = global2local( hamiltonian )
     acc_adiabatic, cb = make_data_and_callback(save=returns)
     cost, cb = make_adiabatic_cost_and_callback(Hglobal = hamiltonian,
@@ -49,7 +62,19 @@ def VQE_adiabatic(hamiltonian, ansatz, initial_guess, num_iters,
     return acc_adiabatic
 
 def VQE_shift( hamiltonian, ansatz, initial_guess, max_iter, shift_iter, quantum_instance, iter_start=0, returns=['x', 'fx']):
+    """
+    Description
 
+    Input:
+        hamiltonian (PauliSumOp):
+        ansatz (QuantumCircuit):
+        initial_guess (ndarray):
+        num_iters (int): number of iteration of the VQE algorithm
+        quantum_instance (QuantumInstance):
+
+    Output:
+        ():
+    """
     hamiltonian_local = global2local( hamiltonian )
 
     results_local  = VQE(hamiltonian_local, ansatz, initial_guess, shift_iter,
