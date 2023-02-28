@@ -15,7 +15,7 @@ def cnot_layer( n_qbits, n_cnot='Full_connect' ):
     Output:
     (QuantumCircuit): Entangling layer 
     """ 
-    sysA = int( n_qbits/2 )
+    sysA = int( len(n_qbits)/2 )
         
     if isinstance( n_cnot, int ):
         for i in range( n_cnot ):
@@ -92,10 +92,10 @@ def ansatz_constructor( n_qbits, unitaries=[SCL, SCL, SCL], n_qb_crz=[2,2,2], de
     (QuantumCircuit): The State Efficient Ansatz parametric quantum circuit (PQC).
     """
    
-    def circuit(params_1, params_2, params_3):
-        unitaries[0]( params_1, range( int(n_qbits/2) ), n_qbits_crz=int(n_qb_crz[0]), deep=deep[0] )
-        cnot_layer( n_qbits, n_cnot=n_cnot )
-        unitaries[1]( params_2, range( int(n_qbits/2) ), n_qbits_crz=int(n_qb_crz[1]), deep=deep[1] )
-        unitaries[2]( params_3, range( int(n_qbits/2), n_qbits ), n_qbits_crz=int(n_qb_crz[2]), deep=deep[2] )
+    def circuit(params):
+        unitaries[0]( params[0], range( int(n_qbits/2) ), n_qbits_crz=int(n_qb_crz[0]), deep=deep[0] )
+        cnot_layer( range(n_qbits), n_cnot=n_cnot )
+        unitaries[1]( params[1], range( int(n_qbits/2) ), n_qbits_crz=int(n_qb_crz[1]), deep=deep[1] )
+        unitaries[2]( params[2], range( int(n_qbits/2), n_qbits ), n_qbits_crz=int(n_qb_crz[2]), deep=deep[2] )
 
     return circuit
