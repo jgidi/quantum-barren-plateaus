@@ -55,9 +55,9 @@ Tutorials:
 
 2.- [Avoiding Cost-function induced Barren Plateaus](https://github.com/jgidi/quantum-barren-plateaus/blob/d89ac2b072019616ebb313357f6346980e6d42ca/Tutorials/CostFunction_BarrenPlateaus.ipynb)
 
-3.-  
+3.- [State Efficient Ansatz](https://github.com/jgidi/quantum-barren-plateaus/blob/932915a8d6a35c4e6cbca76322e7f5a825a4e000/Tutorials/State_Efficient_Ansatz_BeH2.ipynb)
 
-4.-
+4.- [Classical Pretraining]()
 
 5.- [Combining the methods](https://github.com/jgidi/quantum-barren-plateaus/blob/d89ac2b072019616ebb313357f6346980e6d42ca/Tutorials/Combining_methods.ipynb)
 
