@@ -51,17 +51,17 @@ In this project, we develop a __Qiskit module__ that includes several proposals 
 
 Tutorials:
 
-1.- [Introduction to QuBaP](https://github.com/jgidi/quantum-barren-plateaus/blob/d89ac2b072019616ebb313357f6346980e6d42ca/Tutorials/Introduction_to_QuBaP.ipynb)
+1.- [Introduction to QuBaP](https://github.com/jgidi/quantum-barren-plateaus/blob/main/Tutorials/Introduction_to_QuBaP.ipynb)
 
-2.- [Avoiding Cost-function induced Barren Plateaus](https://github.com/jgidi/quantum-barren-plateaus/blob/d89ac2b072019616ebb313357f6346980e6d42ca/Tutorials/CostFunction_BarrenPlateaus.ipynb)
+2.- [Avoiding Cost-function induced Barren Plateaus](https://github.com/jgidi/quantum-barren-plateaus/blob/main/Tutorials/CostFunction_BarrenPlateaus.ipynb)
 
-3.- [State Efficient Ansatz](https://github.com/jgidi/quantum-barren-plateaus/blob/932915a8d6a35c4e6cbca76322e7f5a825a4e000/Tutorials/State_Efficient_Ansatz_BeH2.ipynb)
+3.- [State Efficient Ansatz](https://github.com/jgidi/quantum-barren-plateaus/blob/main/Tutorials/State_Efficient_Ansatz_BeH2.ipynb)
 
-4.- [Classical Pretraining](https://github.com/jgidi/quantum-barren-plateaus/blob/3ab5be7d7c68b66296c6460ba1fd1bb7c8f4d8c8/Tutorials/MPS_pretraining.ipynb)
+4.- [Classical Pretraining](https://github.com/jgidi/quantum-barren-plateaus/blob/main/Tutorials/MPS_pretraining.ipynb)
 
-5.- [Combining the methods](https://github.com/jgidi/quantum-barren-plateaus/blob/d89ac2b072019616ebb313357f6346980e6d42ca/Tutorials/Combining_methods.ipynb)
+5.- [Combining the methods](https://github.com/jgidi/quantum-barren-plateaus/blob/main/Tutorials/Combining_methods.ipynb)
 
-6.- [Early implementation on Pennylane](https://github.com/jgidi/quantum-barren-plateaus/blob/dceb5d06908d3c97c6324d5bc29d48592db81e09/Tutorials/Tutorial_early_pennylane.ipynb)
+6.- [Early implementation on Pennylane](https://github.com/jgidi/quantum-barren-plateaus/blob/main/Tutorials/Tutorial_early_pennylane.ipynb)
 
 Install via `pip` as
 ``` sh
