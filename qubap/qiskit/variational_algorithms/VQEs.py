@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+from .tools import energy_evaluation, make_adiabatic_cost_and_callback
+from qubap.qiskit.tools import make_data_and_callback, SPSA_calibrated
+
 def VQE(hamiltonian, ansatz, initial_guess, num_iters, quantum_instance,
         returns=['x', 'fx'], iter_start=0):
     """
@@ -26,43 +29,6 @@ def VQE(hamiltonian, ansatz, initial_guess, num_iters, quantum_instance,
     optimizer.minimize(energy_hamiltonian , initial_guess)
 
     return results
-
-
-def classical_solver(hamiltonian):
-    eig = NumPyMinimumEigensolver()
-    results = eig.compute_minimum_eigenvalue( hamiltonian )
-    return results
-
-def make_adiabatic_cost_and_callback(Hlocal, Hglobal, circ, backend, niters,
-                                     transition_lims=(0.0, 1.0), callback=None):
-    s = [0]
-    a1, a2 = np.min(transition_lims), np.max(transition_lims)
-    def get_a(x):
-        if a1 < x < a2:
-            return float((x - a1) / (a2 - a1))
-        else:
-            return int( x > a1 )
-    def cost(x):
-        # 'a' is linearly increasing.
-        # Starts at 0 for a1% of the iterations, and reaches 1.0 at a2%
-        a = get_a( s[0] / niters )
-        if a <= 0:
-            H = Hlocal
-        elif a >= 1:
-            H = Hglobal
-        else:
-            H = (1 - a)*Hlocal + a*Hglobal
-        return energy_evaluation(H, circ, x, backend)
-    def update(i=None):
-        if i is None:
-            s[0] += 1
-        else:
-            s[0] = i
-    def cb_wrapper(nfev, x, fx, dx, is_accepted=True):
-        update()
-        if callback is not None:
-            callback(nfev, x, fx, dx, is_accepted)
-    return cost, cb_wrapper
 
 def VQE_adiabatic(hamiltonian, ansatz, initial_guess, num_iters,
                   quantum_instance, transition_lims=(0.0, 1.0),
