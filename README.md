@@ -1,6 +1,6 @@
 # __Avoiding Barren Plateaus in Variational Quantum Circuits__
 
-A project by Felipe Quinteros (UdeC, Chile), Mariana Navarro (ICFO, Spain), Jorge Gidi (UdeC, Chile), and Luciano Pereira (IFF-CSIC, Spain) for the Open Hackathon in the Qhack 2023.
+A project by Felipe Quinteros (UdeC, Chile), Mariana Navarro (ICFO, Spain), Jorge Gidi (UdeC, Chile), and Luciano Pereira (IFF-CSIC, Spain) for the [Open Hackathon in the Qhack 2023](https://github.com/XanaduAI/QHack2023).
 
 __Variational quantum algorithms__ have the potential to solve real-world practical problems with quantum computers in the near term [1]. They are hybrid quantum-classical algorithms that optimize an objective function encoded on a hamiltonian over a parametric quantum circuit. This objective function is efficiently evaluated in a quantum computer, while a classical computer is used to drive the optimization. The variational algorithms find applications in areas such as chemistry and finance.  
 
