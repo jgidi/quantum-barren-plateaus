@@ -21,7 +21,7 @@ In [] the authors recommend avoiding this kind of Hamiltonian in the early itera
 
 <img src="https://github.com/jgidi/quantum-barren-plateaus/blob/main/imgs/fig4_from_cost_function_induced_barren_plateau.JPG?raw=true" width=500 style="display: block; margin: 0 auto"  >
 
-2.- The parametric quantum circuit is too expressive, that is equivalent to saying that the parametric circuit approximates a 2-design. When this condition is fulfilled the average gradient of the cost functions is null and its variance decay exponentially. $$ \mathbb{E}( \nabla \langle H\rangle )=0, \qquad {\rm Var}( \nabla \langle H\rangle ) \sim \frac{1}{2^n}.$$ Almost any variational circuit composed of layers of local gates intercalated with layers of entangling gates satisfies this condition. Reducing the expressibility of variational circuits is a way to avoid barren plateaus, as is suggested in []. 
+2.- The parametric quantum circuit is too expressive, that is equivalent to saying that the parametric circuit approximates a 2-design. When this condition is fulfilled the average gradient of the cost functions is null and its variance decay exponentially. $$\mathbb{E}( \nabla \langle H\rangle )=0, \qquad {\rm Var}( \nabla \langle H\rangle ) \sim \frac{1}{2^n}.$$ Almost any variational circuit composed of layers of local gates intercalated with layers of entangling gates satisfies this condition. Reducing the expressibility of variational circuits is a way to avoid barren plateaus, as is suggested in []. 
 
 <img src="https://github.com/jgidi/quantum-barren-plateaus/blob/main/imgs/fig5_from_mitigating_barren_plateaus_of_vqes.JPG?raw=true" width=500 style="display: block; margin: 0 auto"  >
 
