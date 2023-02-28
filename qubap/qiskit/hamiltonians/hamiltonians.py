@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
-from qiskit.quantum_info import SparsePauliOp
+import numpy as np
+
+import qiskit.opflow as of
+from qiskit.quantum_info import Pauli, SparsePauliOp
 from qiskit.opflow.primitive_ops import PauliSumOp
 
-def parse_hamiltonian(paulis, coefs):
-    if isinstance(paulis, str): paulis = [paulis]
-    if isinstance(coefs, str): coefs = [coefs]
-
-    return PauliSumOp( SparsePauliOp(paulis, coefs) )
+from .tools import parse_hamiltonian
 
 def ladder_hamiltonian(num_qubits, transverse_field_intensity=0):
     def interactions(i, j):
@@ -37,3 +36,30 @@ def ladder_hamiltonian(num_qubits, transverse_field_intensity=0):
             operator_coeffs.append(transverse_field_intensity)
 
     return parse_hamiltonian(operators, operator_coeffs)
+
+def test_hamiltonian( num_qubits, coeff ):
+    ops = []
+
+    z = np.zeros(num_qubits)
+    x = np.ones(num_qubits)
+    ops.append( Pauli((z,x)) )
+
+    z = np.ones(num_qubits)
+    ops.append( Pauli((z,x)) )
+
+    x = np.zeros(num_qubits)
+    ops.append( Pauli((z,x)) )
+
+    hamiltonian = PauliSumOp( SparsePauliOp( ops, coeff ) )
+
+    return hamiltonian.reduce()
+
+def test_hamiltonian_2( num_qubits ):
+
+    Z = of.Z #Pauli Z
+    I = of.I #Identidad
+    Zero = 0.5*( I + Z )
+
+    hamiltonian = eval( '('+(num_qubits-1)*'I^'+'I)-('+(num_qubits-1)*'Zero^'+'Zero)' )
+
+    return hamiltonian.reduce()
