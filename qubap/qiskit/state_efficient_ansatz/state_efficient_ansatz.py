@@ -1,7 +1,7 @@
+import numpy as np
+
 from qiskit import QuantumCircuit
 from qiskit.circuit import ParameterVector
-
-import numpy as np
 
 def cnot_layer( n_qbits, n_cnot='Full_connect' ):
     """
@@ -35,33 +35,14 @@ def cnot_layer( n_qbits, n_cnot='Full_connect' ):
             
     return circ
 
-# TODO mover a tools solo esta funcion
-def parity_test( n ):
-    """
-    Check if the number is even or odd.
-
-    Input:
-    n (int):
-
-    Output:
-    0 (int):  if the number is even. 
-    -1 (int): if the number is odd.
-    """
-    if n%2 == 0:
-        p = 0
-    else:
-        p = -1
-    
-    return p
-
 
 def SCL( params, n_qbits, n_qbits_crz=2, deep=1, name=None ):
     """
-    Schmith Coefficient Layer (SCL) that perform a schmmith decomposition or a basis change.
+    Schmidt Coefficient Layer (SCL) that performs a Schmidth decomposition or a basis change.
 
     Input:
     params (list):      Parameters to initialize the circuit.
-    n_qbits (int):      Number of qubits.    
+    n_qbits (iterable): Qubits of the layer.
     n_qbits_crz (list): Qubits in the control Z gate. Default (2) is for 1 control qubit and 1 target qubit.    
     deep (int):         Times that the circuit is repeated.
     name (str):         Name of the circuit.
@@ -71,7 +52,7 @@ def SCL( params, n_qbits, n_qbits_crz=2, deep=1, name=None ):
     """
 
     qubits= len( n_qbits )
-    par = parity_test( qubits )
+    par = -(qubits % 2) # parity test: -1 for odd, 0 for even
     qc = QuantumCircuit( qubits, name=name )
         
     for i in range( qubits ):

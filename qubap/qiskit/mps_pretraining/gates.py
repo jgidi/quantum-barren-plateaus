@@ -30,7 +30,3 @@ def W(self, params, qubits):
 
 def U(self, params, qubits):
     self.append(_GateU(params), qubits)
-
-# TODO keep? To make U/W available as QC methods
-QuantumCircuit.W = W
-QuantumCircuit.U = U
