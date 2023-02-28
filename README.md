@@ -49,6 +49,15 @@ In this project, we develop a __Qiskit module__ that includes several proposals 
 
 [6] Noise-induced barren plateaus in variational quantum algorithms, Nat Commun 12, 6961 (2021).
 
+Tutorials:
+
+1.- [Introduction to QuBaP](https://github.com/jgidi/quantum-barren-plateaus/blob/d89ac2b072019616ebb313357f6346980e6d42ca/Tutorials/Introduction_to_QuBaP.ipynb)
+2.- [Avoiding Cost-function induced Barren Plateaus](https://github.com/jgidi/quantum-barren-plateaus/blob/d89ac2b072019616ebb313357f6346980e6d42ca/Tutorials/CostFunction_BarrenPlateaus.ipynb)
+3.-  
+4.-
+5.- [Combining the methods](https://github.com/jgidi/quantum-barren-plateaus/blob/d89ac2b072019616ebb313357f6346980e6d42ca/Tutorials/Combining_methods.ipynb)
+
+
 Install via `pip` as
 ``` sh
 pip install git+https://github.com/jgidi/quantum-barren-plateaus
