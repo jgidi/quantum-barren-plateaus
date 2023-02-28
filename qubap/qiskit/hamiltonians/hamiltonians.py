@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-import numpy as np
+# %%
+import sys
+sys.path.append('../../..')
 
+import numpy as np
 import qiskit.opflow as of
 from qiskit.quantum_info import Pauli, SparsePauliOp
 from qiskit.opflow.primitive_ops import PauliSumOp, PauliOp
-
-from .tools import parse_hamiltonian
+from qubap.qiskit.hamiltonians.tools import parse_hamiltonian
 
 def global2local( hamiltoniano, reduce=True ):
     """
@@ -114,3 +116,7 @@ def test_hamiltonian_2( num_qubits ):
     hamiltonian = eval( '('+(num_qubits-1)*'I^'+'I)-('+(num_qubits-1)*'Zero^'+'Zero)' )
 
     return hamiltonian.reduce()
+
+# %%
+global2local( test_hamiltonian(2, [3,2,2]))
+# %%
