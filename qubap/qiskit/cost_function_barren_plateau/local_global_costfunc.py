@@ -1,7 +1,3 @@
-# %%
-import sys
-sys.path.append('../../..')
-
 import qiskit.opflow as of
 from qiskit import QuantumCircuit
 from qiskit.circuit import ParameterVector
@@ -91,6 +87,6 @@ def local_observable(n_qbitsB, n_qbitsA=1):
     local_observable = global2local(global_observable(n_qbitsB, n_qbitsA))
     return local_observable
 
-# %%
-ansatz_numerical(3).draw("mpl")
-# %%
+# # %%
+# ansatz_numerical(3).draw("mpl")
+# # %%
