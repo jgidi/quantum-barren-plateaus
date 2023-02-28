@@ -77,18 +77,18 @@ def test_hamiltonian_2( num_qubits ):
     return hamiltonian.reduce()  
 
 def make_adiabatic_cost_and_callback(Hlocal, Hglobal, circ, backend, niters,
-                                     transition_lims=(0.3, 0.7), callback=None):
+                                     transition_lims=(0.0, 1.0), callback=None):
     s = [0]
     a1, a2 = np.min(transition_lims), np.max(transition_lims)
-    if a1 == a2:
-        get_a = lambda x : int( x > a1 )
-    else:
-        get_a = lambda x : float((x/niters - a1) / (a2 - a1))
-
+    def get_a(x):
+        if a1 < x < a2:
+            return float((x - a1) / (a2 - a1))
+        else:
+            return int( x > a1 )
     def cost(x):
         # 'a' is linearly increasing.
         # Starts at 0 for a1% of the iterations, and reaches 1.0 at a2%
-        a = get_a( s[0] )
+        a = get_a( s[0] / niters )
         if a <= 0:
             H = Hlocal
         elif a >= 1:
@@ -108,7 +108,7 @@ def make_adiabatic_cost_and_callback(Hlocal, Hglobal, circ, backend, niters,
     return cost, cb_wrapper
 
 def VQE_adiabatic(hamiltonian, ansatz, initial_guess, num_iters,
-                  quantum_instance, transition_lims=(0.3, 0.7),
+                  quantum_instance, transition_lims=(0.0, 1.0),
                   returns=['x', 'fx']):
 
     hamiltonian_local = global2local( hamiltonian )
@@ -134,4 +134,7 @@ def VQE_shift( hamiltonian, ansatz, initial_guess, max_iter, shift_iter, quantum
     results_global = VQE(hamiltonian, ansatz, results_local['x'][-1], max_iter-shift_iter, 
                          quantum_instance, iter_start=shift_iter+iter_start) 
 
-    return np.append( results_local['x'], results_global['x'], axis=0 )
+    results  = {'local'  : results_local,
+                'global' : results_global}
+
+    return results
