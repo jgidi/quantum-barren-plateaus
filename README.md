@@ -15,9 +15,8 @@ In order to reach real-word applications with variational algorithms, we have to
 This problem can appear due to the following reasons:
 
 1.- The cost function is global, i.e., involves measurements in many qubits [2]. For example, consider the $n$-qubits Hamiltonian 
-\begin{equation}
-H = I^{\otimes n}-|0^{\otimes n}\rangle\langle 0^{\otimes n}|.
-\end{equation}
+
+$$H = I^{\otimes n}-|0^{\otimes n}\rangle\langle 0^{\otimes n}|.\qquad (1)$$
 This Hamiltonian require a measurement over $|0^{\otimes n}\rangle$, wich involve all the $n$ qubits. Thereby, the sample of shots $N_{shots}$ used to evaluate $H$ has to split into $2^n$ outputs. In the case $N_{shots}<2^n$, which always happens for large $n$, the number of shots is not enough large to perform a precise evaluation of $H$, so that its gradient vanish and the barren plateau appears. This occurs independently of the shape and the depth of the variational circuit.
 
 <img src="https://github.com/jgidi/quantum-barren-plateaus/blob/main/imgs/fig3_from_cost_function_induced_barren_plateau.JPG?raw=true" width=500 style="display: block; margin: 0 auto"  >
@@ -26,7 +25,7 @@ In [2] the authors recommend avoiding this kind of Hamiltonian in the early iter
 
 <img src="https://github.com/jgidi/quantum-barren-plateaus/blob/main/imgs/fig4_from_cost_function_induced_barren_plateau.JPG?raw=true" width=500 style="display: block; margin: 0 auto"  >
 
-2.- The parametric quantum circuit is too expressive, that is equivalent to saying that the parametric circuit approximates a 2-design [3]. When this condition is fulfilled the average gradient of the cost functions is null and its variance decay exponentially. $$ \mathbb{E}( \nabla \langle H\rangle )=0, \qquad {\rm Var}( \nabla \langle H\rangle ) \sim \frac{1}{2^n}.$$ Almost any variational circuit composed of layers of local gates intercalated with layers of entangling gates satisfies this condition. Reducing the expressibility of variational circuits is a way to avoid barren plateaus, as is suggested in [4]. 
+2.- The parametric quantum circuit is too expressive, that is equivalent to saying that the parametric circuit approximates a 2-design [3]. When this condition is fulfilled the average gradient of the cost functions is null and its variance decay exponentially. $$\mathbb{E}( \nabla \langle H\rangle )=0, \qquad {\rm Var}( \nabla \langle H\rangle ) \sim \frac{1}{2^n}.$$ Almost any variational circuit composed of layers of local gates intercalated with layers of entangling gates satisfies this condition. Reducing the expressibility of variational circuits is a way to avoid barren plateaus, as is suggested in [4]. 
 
 <img src="https://github.com/jgidi/quantum-barren-plateaus/blob/main/imgs/fig5_from_mitigating_barren_plateaus_of_vqes.JPG?raw=true" width=500 style="display: block; margin: 0 auto"  >
 
