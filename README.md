@@ -1,6 +1,6 @@
 # __Avoiding Barren Plateaus in Variational Quantum Circuits__
 
-A project by Felipe Quinteros (UdeC, Chile), Mariana Navarro (ICFO, Spain), Jorge Gidi (UdeC, Chile), and Luciano Pereira (IFF-CSIC, Spain) for the Open Hackathon in the Qhack 2023.
+A project by Felipe Quinteros (UdeC, Chile), Mariana Navarro (ICFO, Spain), Jorge Gidi (UdeC, Chile), and Luciano Pereira (IFF-CSIC, Spain) for the [Open Hackathon in the Qhack 2023](https://github.com/XanaduAI/QHack2023).
 
 __Variational quantum algorithms__ have the potential to solve real-world practical problems with quantum computers in the near term [1]. They are hybrid quantum-classical algorithms that optimize an objective function encoded on a hamiltonian over a parametric quantum circuit. This objective function is efficiently evaluated in a quantum computer, while a classical computer is used to drive the optimization. The variational algorithms find applications in areas such as chemistry and finance.  
 
@@ -48,6 +48,19 @@ In this project, we develop a __Qiskit module__ that includes several proposals 
 [5] Matrix product state pre-training for quantum machine learning, Quantum Sci. Technol. 7, 035014 (2022).
 
 [6] Noise-induced barren plateaus in variational quantum algorithms, Nat Commun 12, 6961 (2021).
+
+Tutorials:
+
+1.- [Introduction to QuBaP](https://github.com/jgidi/quantum-barren-plateaus/blob/d89ac2b072019616ebb313357f6346980e6d42ca/Tutorials/Introduction_to_QuBaP.ipynb)
+
+2.- [Avoiding Cost-function induced Barren Plateaus](https://github.com/jgidi/quantum-barren-plateaus/blob/d89ac2b072019616ebb313357f6346980e6d42ca/Tutorials/CostFunction_BarrenPlateaus.ipynb)
+
+3.-  
+
+4.-
+
+5.- [Combining the methods](https://github.com/jgidi/quantum-barren-plateaus/blob/d89ac2b072019616ebb313357f6346980e6d42ca/Tutorials/Combining_methods.ipynb)
+
 
 Install via `pip` as
 ``` sh
