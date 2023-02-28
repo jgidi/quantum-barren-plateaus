@@ -2,6 +2,8 @@
 
 ## The barren plateau phenomenon is one of the main issues to solve in order to attain practical applications of variational quantum algorithms. This consists of the lack of convergence due to the vanishing of the cost function gradient. In this project, we implement several proposals to avoid barren plateaus in variational algorithms.
 
+A project by Felipe Quinteros (UdeC, Chile), Mariana Navarro (ICFO, Spain), Jorge Gidi (UdeC, Chile), and Luciano Pereira (IFF-CSIC, Spain) for the Open Hackathon in the Qhack 2023.
+
 Variational quantum algorithms have the potential to solve real-world practical problems with quantum computers in the near term. They are hybrid quantum-classical algorithms that optimize an objective function encoded on a hamiltonian over a parametric quantum circuit. This objective function is efficiently evaluated in a quantum computer, while a classical computer is used to drive the optimization. The variational algorithms find applications in areas such as chemistry and finance.  
 
 <img src="https://github.com/jgidi/quantum-barren-plateaus/blob/main/imgs/fig1_from_Noisy_intermediate_scale_quantum_algorithms.JPG?raw=true" width=500 style="display: block; margin: 0 auto" >
@@ -33,7 +35,7 @@ In [] the authors recommend avoiding this kind of Hamiltonian in the early itera
 
 <img src="https://github.com/jgidi/quantum-barren-plateaus/blob/main/imgs/fig7_from_noise_induced_BP.JPG?raw=true" width=400 style="display: block; margin: 0 auto"  >
 
-
+In this project, we develop a Qiskit module that includes several proposals to reduce the impact of barren plateaus in variational quantum algorithms. We also provide an early implementation on Pennylane. For more details visit the introductory notebook or each individual tutorial notebook.
 
 
 Install via `pip` as
