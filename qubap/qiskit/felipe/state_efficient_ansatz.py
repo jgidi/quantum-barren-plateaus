@@ -8,15 +8,14 @@ def cnot_layer( n_qbits, n_cnot='Full_connect' ):
     Create an entangling layer circuit.
 
     Input:
-        -n_qbits: Number of qubits of the circuit
-        
-        -n_cnot:  Specify the type of entangling layer:
-                    -Could be 'Full_connect' that means the circuit is full fill with CNOT's gates. 
-                    -A intenger number that indicates the number of CNOT's to implement from the first qubit to the last of the first half of qubits in descendet order.
-                    -A list of pair list e.g. [[1,2], [7,6]] where the first element of the array is the control qubit e.g 1, 7 and the second qubit of the list the target qubit e.g 2, 6.
+    n_qbits (int): Number of qubits of the circuit
+    n_cnot (int, list, str):  Specify the type of entangling layer:
+        str = 'Full_connect' ; that means the circuit is full fill with CNOT's gates. 
+        int = Number of CNOT's to implement from the first qubit to the last of the first half of qubits in descendet order.
+        list= List of pair values e.g. [[1,2], [7,6]], first element of each list is control qubit e.g 1, 7 and the second the target qubit e.g 2, 6.
 
     Output:
-        - The entangling layer as a Quantum Circuit.
+    (QuantumCircuit): Entangling layer 
     """ 
     sysA = int( n_qbits/2 )
     circ = QuantumCircuit( n_qbits )
@@ -42,10 +41,11 @@ def parity_test( n ):
     Check if the number is even or odd.
 
     Input:
-        -n: A number.
+    n (int):
 
     Output:
-        -Return 0 if the number is even or -1 if the number is odd.
+    0 (int):  if the number is even. 
+    -1 (int): if the number is odd.
     """
     if n%2 == 0:
         p = 0
@@ -57,21 +57,17 @@ def parity_test( n ):
 
 def SCL( params, n_qbits, n_qbits_crz=2, deep=1, name=None ):
     """
-    Schmith Coefficient Layer.
+    Schmith Coefficient Layer (SCL) that perform a schmmith decomposition or a basis change.
 
     Input:
-        -params:      The parameters to initialize the circuit.
-
-        -n_qbits:     The number of qubits of the circuit.
-        
-        -n_qbits_crz: How many qubits are used in the control Z gate. Default is two; one control and one target.
-        
-        -deep:        The deep of the circuit or how many times the circuit is repeated. Default is one.
-        
-        -name:        The name of the circuit. Default None.
+    params (list):      Parameters to initialize the circuit.
+    n_qbits (int):      Number of qubits.    
+    n_qbits_crz (list): Qubits in the control Z gate. Default (2) is for 1 control qubit and 1 target qubit.    
+    deep (int):         Times that the circuit is repeated.
+    name (str):         Name of the circuit.
 
     Output:
-        -A Parametric Quantum Circuit (PQC) that in our case could perform a schmith decomposition or a basis change.
+    (QuantumCircuit): A Parametric Quantum Circuit.
     """
 
     qubits= len( n_qbits )
@@ -106,25 +102,22 @@ def SCL( params, n_qbits, n_qbits_crz=2, deep=1, name=None ):
 
 def ansatz_constructor( n_qbits, unitaries=[SCL, SCL, SCL], n_qb_crz=[2,2,2], deep= [1,1,1], n_cnot='Full_connect', set_barrier=False ):
     """
-    The ansatz circuit that are made of three Parametrized Quantum Circuits (PQC's) and one entangling layer. The input parameters will define this four parts of the ansatz circuit.
+    The State Efficient Ansatz parametric quantum circuit (PQC) that perform a schmith decomposition, entanglement and a basis change.
+    The ansatz circuit is made of three PQC's and one entangling layer. 
+    The input parameters will define this four gates of the ansatz circuit U_1, V, U_2 and U_3.
 
     Input:
-        -n_qbits:     The number of qubits of the circuit.
-        
-        -unitaries:   A list of three PQC's
-        
-        -n_qbits_crz: A list containing how many qubits are used in the control Z gate for each PQC's. Default are [2,2,2].
-        
-        -deep:        A list containing the deep of each PQC. Default is [1,1,1].
-
-        -n_cnot:  Specify the type of entangling layer:
-                    -Could be 'Full_connect' that means the circuit is full fill with CNOT's gates. 
-                    -A intenger number that indicates the number of CNOT's to implement from the first qubit to the last of the first half of qubits in descendet order.
-                    -A list of pair list e.g. [[1,2], [7,6]] where the first element of the array is the control qubit e.g 1, 7 and the second qubit of the list the target qubit e.g 2, 6.
-
+    n_qbits (int):            Number of qubits.    
+    unitaries (list):         Containing the three PQC's that conform the SEA.
+    n_qbits_crz (list):       Qubits in the control Z gate for each PQC. Default ([2,2,2]) is for 1 control qubit and 1 target qubit for each PQC.    
+    deep (list):              Times that each circuit is repeated.
+    n_cnot (int, list, str):  Specify the type of entangling layer:
+        str = 'Full_connect' ; that means the circuit is full fill with CNOT's gates. 
+        int = Number of CNOT's to implement from the first qubit to the last of the first half of qubits in descendet order.
+        list= List of pair values e.g. [[1,2], [7,6]], first element of each list is control qubit e.g 1, 7 and the second the target qubit e.g 2, 6.
 
     Output:
-        -A Parametric Quantum Circuit (PQC) that in our case could perform a schmith decomposition or a basis change.
+    (QuantumCircuit): The State Efficient Ansatz parametric quantum circuit (PQC).
     """
 
     num_params_SCL = ( deep[0] +1 )*n_qbits + deep[0]*(n_qbits - 2)
