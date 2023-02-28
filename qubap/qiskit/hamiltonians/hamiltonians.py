@@ -1,12 +1,55 @@
 #!/usr/bin/env python3
-
 import numpy as np
 
 import qiskit.opflow as of
 from qiskit.quantum_info import Pauli, SparsePauliOp
-from qiskit.opflow.primitive_ops import PauliSumOp
+from qiskit.opflow.primitive_ops import PauliSumOp, PauliOp
 
 from .tools import parse_hamiltonian
+
+def global2local( hamiltoniano, reduce=True ):
+    """
+    Descriptiom
+
+    Input:
+        hamiltonian (PauliSumOp):
+        reduce(, optional):
+
+    Output:
+        ():
+    """
+    num_qubits = hamiltoniano.num_qubits
+
+    ops_local   = []
+    coeff_local = []
+
+    paulis_global = hamiltoniano.to_pauli_op()
+    if isinstance( paulis_global, PauliOp ):
+        paulis_global = [paulis_global]
+
+    for pauli_global, coeff in zip( paulis_global, hamiltoniano.coeffs ):
+        pauli_label = pauli_global.primitive.to_label()
+
+        for qb in range(num_qubits):
+            pauli_local = pauli_label[qb]
+            x = np.zeros(num_qubits)
+            z = np.zeros(num_qubits)
+
+            if pauli_local == 'X':
+                x[qb] = 1
+            elif pauli_local == 'Z':
+                z[qb] = 1
+            elif pauli_local == 'Y':
+                x[qb] = 1
+                z[qb] = 1
+
+            ops_local.append( Pauli((z,x)) )
+            coeff_local.append( coeff/num_qubits )
+
+    hamiltoniano_local = PauliSumOp( SparsePauliOp( ops_local, coeff_local ) )
+
+    return hamiltoniano_local.reduce() if reduce else hamiltoniano_local
+
 
 def ladder_hamiltonian(num_qubits, transverse_field_intensity=0):
     def interactions(i, j):
@@ -55,11 +98,19 @@ def test_hamiltonian( num_qubits, coeff ):
     return hamiltonian.reduce()
 
 def test_hamiltonian_2( num_qubits ):
+    """
+    Descriptiom
 
+    Input:
+        num_qubits (int): numbers of qubits
+        reduce(, optional):
+
+    Output:
+        ():
+    """
     Z = of.Z #Pauli Z
     I = of.I #Identidad
     Zero = 0.5*( I + Z )
-
     hamiltonian = eval( '('+(num_qubits-1)*'I^'+'I)-('+(num_qubits-1)*'Zero^'+'Zero)' )
 
     return hamiltonian.reduce()
